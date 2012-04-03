@@ -210,9 +210,11 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.forward(80)
 
 
+
+
 def digit_test():
     # Testing routine to be deleted later
-    setting = turtle.Screen()
+    setting = turtle.TurtleScreen()
     setting.title("Turtle Graphics Calculator")
     setting.bgcolor('#C2EBFF')
     our_heroine = CalculatorTurtle(setting)
@@ -230,15 +232,27 @@ def digit_test():
     our_heroine.forward(100)
     setting.mainloop()
 
+
 def add_test():
     # Testing routine to be deleted later
-    setting = turtle.Screen()
-    setting.title("Turtle Graphics Calculator")
+    def button_test():
+        our_heroine = CalculatorTurtle(setting)
+        our_heroine.shape("turtle")
+        our_heroine.add('2042','8569')
+
+    master = turtle.TK.Tk()
+    canvas = turtle.TK.Canvas(master, width=500, height=500)
+    canvas.pack()
+    first_number = turtle.TK.Entry(master)
+    first_number.pack()
+    second_number = turtle.TK.Entry(master)
+    second_number.pack()
+    
+    add_button = turtle.TK.Button(master, text="ADD", command=button_test)
+    add_button.pack()
+    setting = turtle.TurtleScreen(canvas)
     setting.bgcolor('#C2EBFF')
-    our_heroine = CalculatorTurtle(setting)
-    our_heroine.shape("turtle")
-    our_heroine.add('2042','8569')
-    turtle.mainloop()
+    master.mainloop()
 
 #digit_test()
 add_test()
