@@ -1,21 +1,20 @@
+#!/usr/bin/python3
+
 import turtle
 
 class CalculatorTurtle(turtle.RawTurtle):
-
-    # maybe these should be instance variables?---I had thought that
-    # these and the "symbols" dict should be class variables, but
-    # "symbols" seems to need to belong to an instance in order for it
-    # to work in the obvious way
-    width = 48
-    height = 80
     
     def __init__(self, canvas):
         turtle.RawTurtle.__init__(self, canvas)
-        self.symbols = {'0':self.zero, '1':self.one, '2':self.two, '3':self.three, '4':self.four, '5':self.five, '6':self.six, '7':self.seven, '8':self.eight, '9':self.nine, '+':self.plus, '-':self.minus}
+        self.width = 48
+        self.height = 80
+        self.symbols = {'0':self.zero, '1':self.one, '2':self.two,
+        '3':self.three, '4':self.four, '5':self.five, '6':self.six,
+        '7':self.seven, '8':self.eight, '9':self.nine, '+':self.plus,
+        '-':self.minus}
 
-    @classmethod
-    def make_block_waypoint(cls, a, b, x, y):
-        return ((x+a)*cls.width, (y+b)*cls.height)
+    def make_block_waypoint(self, a, b, x, y):
+        return ((x+a)*self.width, (y+b)*self.height)
 
     def to_waypoint(self, wp):
         self.setheading(self.towards(wp[0], wp[1]))
@@ -184,7 +183,7 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.penup()
 
     def add(self, summand1, summand2):
-        # TODO: search for lurking bugs, adjust line and operator sign, improve code readability
+        # TODO: improve code readability, adjust line and operator sign
         for i, figure in enumerate(summand1):
             draw_digit = self.symbols[figure]
             draw_digit(i, 0)
@@ -204,9 +203,11 @@ class CalculatorTurtle(turtle.RawTurtle):
             draw_result_digit = self.symbols[place_sum[-1]]
             if not (i==result_length and place_sum[-1]=='0'):
                 draw_result_digit(len(summand1)-i, -2)
+            if place_sum[-2]!='0':
+                draw_carry_digit = self.symbols[place_sum[-2]]
+                draw_carry_digit(len(summand1)-1-i, 1)
             carry = int(place_sum[-2])
-            # TODO: draw carry digit
-        self.forward(170)
+        self.forward(80)
 
 
 def digit_test():
@@ -236,7 +237,7 @@ def add_test():
     setting.bgcolor('#C2EBFF')
     our_heroine = CalculatorTurtle(setting)
     our_heroine.shape("turtle")
-    our_heroine.add('2012','1971')
+    our_heroine.add('2042','8569')
     turtle.mainloop()
 
 #digit_test()
