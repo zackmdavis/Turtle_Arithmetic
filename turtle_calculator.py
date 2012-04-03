@@ -206,7 +206,7 @@ def add_test():
     our_heroine = CalculatorTurtle(setting)
     our_heroine.shape("turtle")
     our_heroine.add('234','5679')
-    setting.mainloop()
+    turtle.mainloop()
 
 #digit_test()
 add_test()
