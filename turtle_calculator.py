@@ -151,10 +151,28 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.penup()
 
     def plus(self, x, y):
-        pass # TODO: implement
+        self.penup()
+        waypoint = self.make_block_waypoint(0.1, 0.5, x, y)
+        self.to_waypoint(waypoint)
+        self.pendown()
+        self.setheading(0)
+        self.forward(0.8*self.width)
+        self.penup()
+        waypoint = self.make_block_waypoint(0.5, 0.74, x, y)
+        self.to_waypoint(waypoint)
+        self.pendown()
+        self.setheading(270)
+        self.forward(0.48*self.height)
+        self.penup()
 
     def minus(self, x, y):
-        pass # TODO: implement
+        self.penup()
+        waypoint = self.make_block_waypoint(0.1, 0.5, x, y)
+        self.to_waypoint(waypoint)
+        self.pendown()
+        self.setheading(0)
+        self.forward(0.8*self.width)
+        self.penup()        
 
     def bottom_line(self, x, y, length):
         self.penup()
@@ -166,17 +184,30 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.penup()
 
     def add(self, summand1, summand2):
+        # TODO: search for lurking bugs, adjust line and operator sign, improve code readability
         for i, figure in enumerate(summand1):
-            digit = self.symbols[figure]
-            digit(i, 0)
+            draw_digit = self.symbols[figure]
+            draw_digit(i, 0)
+        self.plus(len(summand1)-len(summand2)-1, -1)
         for i, figure in zip(range(len(summand1)-len(summand2), len(summand2)+1), summand2):
-            digit = self.symbols[figure]
-            digit(i, -1)
+            draw_digit = self.symbols[figure]
+            draw_digit(i, -1)
         self.bottom_line(len(summand1)-len(summand2), -1, len(summand2))
-        #for i in range(max(len(summand1), len(summand2))):
-        # TODO: finish writing this function
-             
-        
+        result_length = max(len(summand1), len(summand2))+1
+        for summand in [summand1, summand2]:
+            summand = summand.zfill(result_length)
+        carry = 0
+        for i in range(1, result_length+1):
+            place_sum = sum([int(s[-i]) for s in [summand1.zfill(result_length), summand2.zfill(result_length)]])
+            place_sum += carry
+            place_sum = str(place_sum).zfill(2)
+            draw_result_digit = self.symbols[place_sum[-1]]
+            if not (i==result_length and place_sum[-1]=='0'):
+                draw_result_digit(len(summand1)-i, -2)
+            carry = int(place_sum[-2])
+            # TODO: draw carry digit
+        self.forward(170)
+
 
 def digit_test():
     # Testing routine to be deleted later
@@ -205,7 +236,7 @@ def add_test():
     setting.bgcolor('#C2EBFF')
     our_heroine = CalculatorTurtle(setting)
     our_heroine.shape("turtle")
-    our_heroine.add('234','5679')
+    our_heroine.add('2012','1971')
     turtle.mainloop()
 
 #digit_test()
