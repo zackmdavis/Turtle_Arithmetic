@@ -210,38 +210,32 @@ class CalculatorTurtle(turtle.RawTurtle):
             carry = int(place_sum[-2])
         self.forward(80)
 
-# class TurtleArithmetic:
-#     def __init__(
+class TurtleArithmetic(tkinter.Tk):
+    def __init__(self):
+        tkinter.Tk.__init__(self)
+        self.turtle_canvas = tkinter.Canvas(self, width=400, height=400)
+        self.turtle_canvas.grid(row=0, columnspan=2)
+        self.first_number_label = tkinter.Label(self, text="First number:")
+        self.first_number_label.grid(row=1, column=0, sticky='E')
+        self.first_number_field = tkinter.Entry(self)
+        self.first_number_field.configure(width=5)
+        self.first_number_field.grid(row=1, column=1, sticky='W')
 
+        self.second_number_label = tkinter.Label(self, text="Second number:")
+        self.second_number_label.grid(row=2, column=0, sticky='E')
+        self.second_number_field = tkinter.Entry(self)
+        self.second_number_field.configure(width=5)
+        self.second_number_field.grid(row=2, column=1, sticky='W')
+        self.add_button = tkinter.Button(self, text="ADD", command=self.addition)
+        self.add_button.grid(row=3, column=0)
+        self.setting = turtle.TurtleScreen(self.turtle_canvas)
+        self.setting.bgcolor('#C2EBFF')
 
-def add_test():
-    # Testing routine to be deleted later
-    def button_test():
-        our_heroine = CalculatorTurtle(setting)
+        self.mainloop()
+
+    def addition(self):
+        our_heroine = CalculatorTurtle(self.setting)
         our_heroine.shape("turtle")
-        our_heroine.add(first_number_field.get(), second_number_field.get())
-        
+        our_heroine.add(self.first_number_field.get(), self.second_number_field.get())
 
-    master = tkinter.Tk()
-    canvas = tkinter.Canvas(master, width=500, height=500)
-    canvas.grid(row=0, columnspan=2)
-    first_number_label = tkinter.Label(master, text="First number:")
-    first_number_label.grid(row=1, column=0, sticky='E')
-    first_number_field = tkinter.Entry(master)
-    first_number_field.configure(width=5)
-    first_number_field.grid(row=1, column=1, sticky='W')
-
-    second_number_label = tkinter.Label(master, text="Second number:")
-    second_number_label.grid(row=2, column=0, sticky='E')
-    second_number_field = tkinter.Entry(master)
-    second_number_field.configure(width=5)
-    second_number_field.grid(row=2, column=1, sticky='W')
-    
-    add_button = tkinter.Button(master, text="ADD", command=button_test)
-    add_button.grid(row=3, column=0)
-    setting = turtle.TurtleScreen(canvas)
-    setting.bgcolor('#C2EBFF')
-    master.mainloop()
-
-#digit_test()
-add_test()
+application = TurtleArithmetic()
