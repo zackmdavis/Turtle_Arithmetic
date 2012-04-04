@@ -217,7 +217,7 @@ class CalculatorTurtle(turtle.RawTurtle):
                 draw_carry_digit = self.symbols[place_sum[-2]]
                 draw_carry_digit(len(summand1)-1-i, 1)
             carry = int(place_sum[-2])
-        self.forward(80)
+        self.forward(30)
 
     def subtract(self, minuhend, subtrahend):
         pass # TODO
@@ -238,6 +238,11 @@ class TurtleArithmetic(tkinter.Tk):
         self.file_menu = tkinter.Menu(self.menu_bar, tearoff=0)
         self.file_menu.add_command(label="Quit", command=self.quit)
         self.menu_bar.add_cascade(label="File", menu=self.file_menu)
+        self.appearance_menu = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.appearance_menu.add_radiobutton(label="Chalkboard", command=self.chalkboard_appearance)
+        self.appearance_menu.add_radiobutton(label="Whiteboard", command=self.whiteboard_appearance)
+        self.menu_bar.add_cascade(label="Appearance", menu=self.appearance_menu)
+
         self.config(menu=self.menu_bar)
 
         self.turtle_canvas = tkinter.Canvas(self, width=400, height=400)
@@ -271,18 +276,34 @@ class TurtleArithmetic(tkinter.Tk):
         self.add_button.grid(row=3, column=3)
 
         self.setting = turtle.TurtleScreen(self.turtle_canvas)
-        self.setting.bgcolor('#2B502B')
-
         self.our_heroine = CalculatorTurtle(self.setting)
+        self.chalkboard_appearance()
+        self.mainloop()
+
+    def chalkboard_appearance(self):
+        self.our_heroine.clear()
+        self.setting.bgcolor("#2B502B")
         self.our_heroine.shape("turtle")
         self.our_heroine.pencolor("#FFFFFF")
         self.our_heroine.pensize(4)
 
-        self.mainloop()
+    def whiteboard_appearance(self):
+        self.our_heroine.clear()
+        self.setting.bgcolor("#F5F5F5")
+        self.our_heroine.shape("turtle")
+        self.our_heroine.pencolor("#0000CD")
+        self.our_heroine.pensize(4)
+
+    def paper_appearance(self):
+        pass # TODO
 
     def addition(self):
+        for i in range(2):
+            self.appearance_menu.entryconfig(i, state=tkinter.DISABLED)
         self.our_heroine.clear()
         self.our_heroine.add(self.first_number_field.get(), self.second_number_field.get())
+        for i in range(2):
+            self.appearance_menu.entryconfig(i, state=tkinter.NORMAL)
 
     def subtraction(self):
         pass # TODO
