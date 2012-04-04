@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import tkinter
 import turtle
 
 class CalculatorTurtle(turtle.RawTurtle):
@@ -209,28 +210,8 @@ class CalculatorTurtle(turtle.RawTurtle):
             carry = int(place_sum[-2])
         self.forward(80)
 
-
-
-
-def digit_test():
-    # Testing routine to be deleted later
-    setting = turtle.TurtleScreen()
-    setting.title("Turtle Graphics Calculator")
-    setting.bgcolor('#C2EBFF')
-    our_heroine = CalculatorTurtle(setting)
-    our_heroine.shape("turtle")
-    our_heroine.zero(0,0)
-    our_heroine.one(1,0)
-    our_heroine.two(2,0)
-    our_heroine.three(3,0)
-    our_heroine.four(4,0)
-    our_heroine.five(5,0)
-    our_heroine.six(0,-1)
-    our_heroine.seven(1,-1)
-    our_heroine.eight(2,-1)
-    our_heroine.nine(3,-1)
-    our_heroine.forward(100)
-    setting.mainloop()
+# class TurtleArithmetic:
+#     def __init__(
 
 
 def add_test():
@@ -238,18 +219,26 @@ def add_test():
     def button_test():
         our_heroine = CalculatorTurtle(setting)
         our_heroine.shape("turtle")
-        our_heroine.add('2042','8569')
+        our_heroine.add(first_number_field.get(), second_number_field.get())
+        
 
-    master = turtle.TK.Tk()
-    canvas = turtle.TK.Canvas(master, width=500, height=500)
-    canvas.pack()
-    first_number = turtle.TK.Entry(master)
-    first_number.pack()
-    second_number = turtle.TK.Entry(master)
-    second_number.pack()
+    master = tkinter.Tk()
+    canvas = tkinter.Canvas(master, width=500, height=500)
+    canvas.grid(row=0, columnspan=2)
+    first_number_label = tkinter.Label(master, text="First number:")
+    first_number_label.grid(row=1, column=0, sticky='E')
+    first_number_field = tkinter.Entry(master)
+    first_number_field.configure(width=5)
+    first_number_field.grid(row=1, column=1, sticky='W')
+
+    second_number_label = tkinter.Label(master, text="Second number:")
+    second_number_label.grid(row=2, column=0, sticky='E')
+    second_number_field = tkinter.Entry(master)
+    second_number_field.configure(width=5)
+    second_number_field.grid(row=2, column=1, sticky='W')
     
-    add_button = turtle.TK.Button(master, text="ADD", command=button_test)
-    add_button.pack()
+    add_button = tkinter.Button(master, text="ADD", command=button_test)
+    add_button.grid(row=3, column=0)
     setting = turtle.TurtleScreen(canvas)
     setting.bgcolor('#C2EBFF')
     master.mainloop()
