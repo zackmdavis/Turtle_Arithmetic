@@ -183,6 +183,15 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.forward(length*self.width)
         self.penup()
 
+    def slash(self, x, y):
+        self.penup()
+        waypoint = self.make_block_waypoint(0, 1, x, y)
+        self.to_waypoint(waypoint)
+        self.pendown()
+        waypoint = self.make_block_waypoint(1, 0, x, y)
+        self.to_waypoint(waypoint)
+        self.penup()
+
     def add(self, summand1, summand2):
         # TODO: improve code readability, adjust line and operator sign
         for i, figure in enumerate(summand1):
@@ -210,32 +219,79 @@ class CalculatorTurtle(turtle.RawTurtle):
             carry = int(place_sum[-2])
         self.forward(80)
 
+    def subtract(self, minuhend, subtrahend):
+        pass # TODO
+
+    def multiply(self, factor1, factor2):
+        pass # TODO
+
+    def divide(self, dividend, divisor):
+        pass # TODO
+
 class TurtleArithmetic(tkinter.Tk):
     def __init__(self):
         tkinter.Tk.__init__(self)
+        self.title("Turtle Arithmetic (Unstable; in development)")
+        self.resizable(width='FALSE', height='FALSE')
+
+        self.menu_bar = tkinter.Menu(self)
+        self.file_menu = tkinter.Menu(self.menu_bar, tearoff=0)
+        self.file_menu.add_command(label="Quit", command=self.quit)
+        self.menu_bar.add_cascade(label="File", menu=self.file_menu)
+        self.config(menu=self.menu_bar)
+
         self.turtle_canvas = tkinter.Canvas(self, width=400, height=400)
-        self.turtle_canvas.grid(row=0, columnspan=2)
+        self.turtle_canvas.grid(row=0, columnspan=4)
+
+        # TODO: adjust coordinate system. This would probably also
+        # require adjustments to add method.
+
         self.first_number_label = tkinter.Label(self, text="First number:")
-        self.first_number_label.grid(row=1, column=0, sticky='E')
+        self.first_number_label.grid(row=1, column=1, sticky='E')
         self.first_number_field = tkinter.Entry(self)
         self.first_number_field.configure(width=5)
-        self.first_number_field.grid(row=1, column=1, sticky='W')
+        self.first_number_field.grid(row=1, column=2, sticky='W')
 
         self.second_number_label = tkinter.Label(self, text="Second number:")
-        self.second_number_label.grid(row=2, column=0, sticky='E')
+        self.second_number_label.grid(row=2, column=1, sticky='E')
         self.second_number_field = tkinter.Entry(self)
         self.second_number_field.configure(width=5)
-        self.second_number_field.grid(row=2, column=1, sticky='W')
-        self.add_button = tkinter.Button(self, text="ADD", command=self.addition)
+        self.second_number_field.grid(row=2, column=2, sticky='W')
+
+        self.add_button = tkinter.Button(self, text="Add", command=self.addition)
         self.add_button.grid(row=3, column=0)
+
+        self.add_button = tkinter.Button(self, text="Subtract", command=self.subtraction)
+        self.add_button.grid(row=3, column=1)
+
+        self.add_button = tkinter.Button(self, text="Multiply", command=self.multiplication)
+        self.add_button.grid(row=3, column=2)
+
+        self.add_button = tkinter.Button(self, text="Divide", command=self.division)
+        self.add_button.grid(row=3, column=3)
+
         self.setting = turtle.TurtleScreen(self.turtle_canvas)
-        self.setting.bgcolor('#C2EBFF')
+        self.setting.bgcolor('#2B502B')
+
+        self.our_heroine = CalculatorTurtle(self.setting)
+        self.our_heroine.shape("turtle")
+        self.our_heroine.pencolor("#FFFFFF")
+        self.our_heroine.pensize(4)
 
         self.mainloop()
 
     def addition(self):
-        our_heroine = CalculatorTurtle(self.setting)
-        our_heroine.shape("turtle")
-        our_heroine.add(self.first_number_field.get(), self.second_number_field.get())
+        self.our_heroine.clear()
+        self.our_heroine.add(self.first_number_field.get(), self.second_number_field.get())
 
-application = TurtleArithmetic()
+    def subtraction(self):
+        pass # TODO
+
+    def multiplication(self):
+        pass # TODO
+
+    def division(self):
+        pass # TODO
+
+if __name__ == "__main__":
+    TurtleArithmetic()
