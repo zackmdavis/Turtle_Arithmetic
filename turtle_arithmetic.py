@@ -238,10 +238,17 @@ class TurtleArithmetic(tkinter.Tk):
         self.file_menu = tkinter.Menu(self.menu_bar, tearoff=0)
         self.file_menu.add_command(label="Quit", command=self.quit)
         self.menu_bar.add_cascade(label="File", menu=self.file_menu)
+
         self.appearance_menu = tkinter.Menu(self.menu_bar, tearoff=0)
         self.appearance_menu.add_radiobutton(label="Chalkboard", command=self.chalkboard_appearance)
         self.appearance_menu.add_radiobutton(label="Whiteboard", command=self.whiteboard_appearance)
         self.menu_bar.add_cascade(label="Appearance", menu=self.appearance_menu)
+
+        # TODO: make this speed menu actually work (presently it seems to set speed to max)
+        self.speed_menu = tkinter.Menu(self.menu_bar, tearoff=0)
+        for s in range(1, 12):
+            self.speed_menu.add_radiobutton(label=str(s), command=lambda: self.our_heroine.speed(s))
+        self.menu_bar.add_cascade(label="Speed", menu=self.speed_menu)
 
         self.config(menu=self.menu_bar)
 
