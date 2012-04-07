@@ -248,7 +248,37 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.forward(45)
 
     def subtract(self, minuhend, subtrahend, x, y):
-        pass # TODO
+        # TODO: add support for multiple borrowings, strip leading zeros
+        self.statement(minuhend, subtrahend, '-', x, y)
+        for i in range(1, len(minuhend)+1):
+            place_difference = int(minuhend[-i]) - int(subtrahend[-i])
+            if place_difference >= 0:
+                draw_result_digit = self.symbols[str(place_difference)]
+                draw_result_digit(x+len(minuhend)+1-i, y-2)
+            else:
+                # I worry that temporarily adjusting the length and
+                # width properties like this is a kludge; how _should_
+                # it be done?
+                self.slash(x+len(minuhend)-i, y)
+                self.width /= 2
+                self.height /= 2
+                draw_creditor_digit = self.symbols[str(int(minuhend[-(i+1)]) - 1)]
+                draw_creditor_digit(2*(x+len(minuhend)-i)+1, 2*(y+1))
+                minuhend = minuhend[:-(i+1)] + str(int(minuhend[-(i+1)]) - 1) + minuhend[-i:]
+                self.width *= 2
+                self.height *= 2
+                self.slash(x+len(minuhend)-i+1, y)
+                self.width /= 2
+                self.height /= 2
+                self.one(2*(x+len(minuhend)+1-i), 2*(y+1))
+                draw_debtor_digit = self.symbols[minuhend[-i]]
+                draw_debtor_digit(2*(x+len(minuhend)+1-i)+1, 2*(y+1))
+                self.width *= 2
+                self.height *= 2
+                place_difference = int('1' + minuhend[-i]) - int(subtrahend[-i])
+                draw_result_digit = self.symbols[str(place_difference)]
+                draw_result_digit(x+len(minuhend)+1-i, y-2)                
+        self.forward(45)
 
     def multiply(self, factor1, factor2, x, y):
         pass # TODO
@@ -334,9 +364,6 @@ class TurtleArithmetic(tkinter.Tk):
         self.our_heroine.pencolor("#0000CD")
         self.our_heroine.pensize(4)
 
-    def paper_appearance(self):
-        pass # TODO
-
         #  TODO: dynamically change self.width and self.height in
         #  response to the number of digits in the user input; that
         #  way, the program can support larger numbers (and long
@@ -344,7 +371,7 @@ class TurtleArithmetic(tkinter.Tk):
 
     def operation(self, op):
         # TODO: check for spaces---Python's int() handles them
-        # intelligently, but my 'add' method does not
+        # intelligently, but my 'add' (&c.) method does not
         a, b = self.first_number_field.get(), self.second_number_field.get()
         nonnumbers = []
         try:
@@ -373,7 +400,7 @@ class TurtleArithmetic(tkinter.Tk):
                 for i in range(2):
                     self.appearance_menu.entryconfig(i, state=tkinter.NORMAL)
                 return
-            pass # TODO
+            self.our_heroine.subtract(a, b, 2, 4)
         elif op == 'x':
             pass # TODO
         elif op == '/':
