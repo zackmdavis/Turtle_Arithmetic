@@ -248,7 +248,9 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.forward(45)
 
     def subtract(self, minuhend, subtrahend, x, y):
-        # TODO: add support for multiple borrowings, strip leading zeros
+        # TODO: add support for multiple borrowings, strip leading
+        # zeros, refrain from retracing already drawn slashes and
+        # digits
         self.statement(minuhend, subtrahend, '-', x, y)
         subtrahend = subtrahend.zfill(len(minuhend))
         for i in range(1, len(minuhend)+1):
@@ -303,6 +305,7 @@ class TurtleArithmetic(tkinter.Tk):
 
         # TODO: submenu to choose chalk colors?
         # IDEA: optional general colorpicker popup window?
+        # BUG: appearance and speed menus appear to behave as part of same radio group
         self.appearance_menu = tkinter.Menu(self.menu_bar, tearoff=0)
         self.appearance_menu.add_radiobutton(label="Chalkboard", command=self.chalkboard_appearance)
         self.appearance_menu.add_radiobutton(label="Whiteboard", command=self.whiteboard_appearance)
@@ -317,8 +320,10 @@ class TurtleArithmetic(tkinter.Tk):
         self.menu_bar.add_cascade(label="Speed", menu=self.speed_menu)
 
         self.config(menu=self.menu_bar)
-
-        self.turtle_canvas = tkinter.Canvas(self, width=500, height=500)
+        
+        self.canvas_width = 500
+        self.canvas_height = 500
+        self.turtle_canvas = tkinter.Canvas(self, width=self.canvas_width, height=self.canvas_height)
         self.turtle_canvas.grid(row=0, columnspan=4)
 
         self.first_number_label = tkinter.Label(self, text="First number:")
@@ -367,16 +372,25 @@ class TurtleArithmetic(tkinter.Tk):
         self.our_heroine.pencolor("#0000CD")
         self.our_heroine.pensize(4)
 
-        #  TODO: dynamically change self.width and self.height in
-        #  response to the number of digits in the user input; that
-        #  way, the program can support larger numbers (and long
-        #  division) without making all calculations unduly small
-
     def aspect(self, op, arg1, arg2):
-        if op == '+':
-            pass # TODO
-        elif op == '-':
-            pass # TODO
+        # BUG: while this crude first draft of a dynamic resizing
+        # routine sort-of works, it is obviously not correct (e.g.,
+        # sums of four-digit numbers display larger than their
+        # one-digit counterparts)
+        if op == '+' or op == '-':
+            calculation_width = max(len(arg1), len(arg2))+1
+            calculation_height = 4
+            max_block_width = self.canvas_width / (calculation_width + 2)
+            max_block_height = self.canvas_height / (calculation_height + 2)
+            if max_block_width < max_block_height:
+                true_block_width = max_block_width
+                true_block_height = (5/3)*(max_block_width)
+            elif max_block_width >= max_block_height:
+                true_block_height = max_block_height
+                true_block_width = (3/5)*(max_block_height)
+            self.our_heroine.width = true_block_width
+            self.our_heroine.height = true_block_height
+            return (true_block_width, true_block_height)
         elif op == 'x':
             pass # TODO
         elif op == '/':
@@ -407,14 +421,17 @@ class TurtleArithmetic(tkinter.Tk):
             self.appearance_menu.entryconfig(i, state=tkinter.DISABLED)
         self.our_heroine.clear()
         if op == '+':
-            self.our_heroine.add(a, b, 4, 4)
+            true_blocks = self.aspect('+', a, b)
+            self.our_heroine.add(a, b, 1, (self.canvas_height/true_blocks[1])-2)
         elif op == '-':
             if m < n:
                 tkinter.messagebox.showerror("Turtle Ignorant of Negative Numbers", "The turtle doesn't know how to subtract a bigger number from a smaller one.")
                 for i in range(2):
                     self.appearance_menu.entryconfig(i, state=tkinter.NORMAL)
                 return
-            self.our_heroine.subtract(a, b, 2, 4)
+            true_blocks = self.aspect('-', a, b)
+            self.our_heroine.subtract(a, b, 1, (self.canvas_height/true_blocks[1])-2)
+
         elif op == 'x':
             self.our_heroine.multiply(a, b, 2, 4)
         elif op == '/':
