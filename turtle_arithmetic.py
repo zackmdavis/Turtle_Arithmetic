@@ -10,7 +10,7 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.penup()
         self.width = 48
         self.height = 80
-        self.speed(0) # max speed for testing purposes; comment out for demos
+        #self.speed(0) # max speed for testing purposes; comment out for demos
         self.symbols = {'0':self.zero, '1':self.one, '2':self.two,
         '3':self.three, '4':self.four, '5':self.five, '6':self.six,
         '7':self.seven, '8':self.eight, '9':self.nine, '+':self.plus,
@@ -215,7 +215,7 @@ class CalculatorTurtle(turtle.RawTurtle):
         for i, s in enumerate(args):
             leading_zeros = True
             for j, figure in enumerate(s):
-                if not leading_zeros or figure!='0':
+                if not leading_zeros or figure!='0' or j == args_length-1:
                     leading_zeros = False
                     draw_digit = self.symbols[figure]
                     draw_digit(x+j+1, y-i)
@@ -250,6 +250,7 @@ class CalculatorTurtle(turtle.RawTurtle):
     def subtract(self, minuhend, subtrahend, x, y):
         # TODO: add support for multiple borrowings, strip leading zeros
         self.statement(minuhend, subtrahend, '-', x, y)
+        subtrahend = subtrahend.zfill(len(minuhend))
         for i in range(1, len(minuhend)+1):
             place_difference = int(minuhend[-i]) - int(subtrahend[-i])
             if place_difference >= 0:
@@ -281,7 +282,10 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.forward(45)
 
     def multiply(self, factor1, factor2, x, y):
-        pass # TODO
+        self.statement(factor1, factor2, 'x', x, y)
+        for i, f2_digit in enumerate(factor2):
+            for j, f1_digit in enumerate(factor1):
+                pass # TODO
 
     def divide(self, dividend, divisor, x, y):
         pass # TODO
@@ -294,8 +298,7 @@ class TurtleArithmetic(tkinter.Tk):
 
         self.menu_bar = tkinter.Menu(self)
         self.file_menu = tkinter.Menu(self.menu_bar, tearoff=0)
-        # BUG: can't quit from menu while turtle is drawing
-        self.file_menu.add_command(label="Quit", command=self.quit)
+        self.file_menu.add_command(label="Quit", command=self.destroy)
         self.menu_bar.add_cascade(label="File", menu=self.file_menu)
 
         # TODO: submenu to choose chalk colors?
@@ -305,12 +308,12 @@ class TurtleArithmetic(tkinter.Tk):
         self.appearance_menu.add_radiobutton(label="Whiteboard", command=self.whiteboard_appearance)
         self.menu_bar.add_cascade(label="Appearance", menu=self.appearance_menu)
 
-        # TODO: make this speed menu actually work (presently it seems to set speed to max)
+          # TODO: test speed menu for odd behavior; it seems to work
+          # inconsistently (!?!) when changed during turtle action; in
+          # the worst case it could be disabled during action
         self.speed_menu = tkinter.Menu(self.menu_bar, tearoff=0)
-        for s in range(1, 12):
-            self.speed_menu.add_radiobutton(label=str(s), command=lambda: self.our_heroine.speed(s))
-            # Disable menu items for demo purposes until I can get them to work:
-            self.speed_menu.entryconfig(s, state=tkinter.DISABLED)
+        for s in ['slowest', 'slow', 'normal', 'fast', 'fastest']:
+            self.speed_menu.add_radiobutton(label=s, command=lambda s=s: self.our_heroine.speed(s))
         self.menu_bar.add_cascade(label="Speed", menu=self.speed_menu)
 
         self.config(menu=self.menu_bar)
@@ -369,9 +372,20 @@ class TurtleArithmetic(tkinter.Tk):
         #  way, the program can support larger numbers (and long
         #  division) without making all calculations unduly small
 
+    def aspect(self, op, arg1, arg2):
+        if op == '+':
+            pass # TODO
+        elif op == '-':
+            pass # TODO
+        elif op == 'x':
+            pass # TODO
+        elif op == '/':
+            pass # TODO
+
     def operation(self, op):
         # TODO: check for spaces---Python's int() handles them
         # intelligently, but my 'add' (&c.) method does not
+        # also, leading zeros
         a, b = self.first_number_field.get(), self.second_number_field.get()
         nonnumbers = []
         try:
@@ -402,7 +416,7 @@ class TurtleArithmetic(tkinter.Tk):
                 return
             self.our_heroine.subtract(a, b, 2, 4)
         elif op == 'x':
-            pass # TODO
+            self.our_heroine.multiply(a, b, 2, 4)
         elif op == '/':
             pass # TODO
         for i in range(2):
