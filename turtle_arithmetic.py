@@ -3,6 +3,18 @@
 import tkinter
 import turtle
 
+class HalfTurtle(object):
+    def __init__(self, turtle):
+        self.turtle = turtle
+
+    def __enter__(self):
+        self.turtle.width /= 2
+        self.turtle.height /= 2
+
+    def __exit__(self, _type, _value, _traceback):
+        self.turtle.width *= 2
+        self.turtle.height *= 2
+
 class CalculatorTurtle(turtle.RawTurtle):
     
     def __init__(self, canvas):
@@ -15,6 +27,7 @@ class CalculatorTurtle(turtle.RawTurtle):
         '3':self.three, '4':self.four, '5':self.five, '6':self.six,
         '7':self.seven, '8':self.eight, '9':self.nine, '+':self.plus,
         '-':self.minus}
+        self.do_half = HalfTurtle(self)
 
     def make_block_waypoint(self, a, b, x, y):
         return ((x+a)*self.width, (y+b)*self.height)
@@ -263,21 +276,15 @@ class CalculatorTurtle(turtle.RawTurtle):
                 # width properties like this is a kludge; how _should_
                 # it be done?
                 self.slash(x+len(minuhend)-i, y)
-                self.width /= 2
-                self.height /= 2
-                draw_creditor_digit = self.symbols[str(int(minuhend[-(i+1)]) - 1)]
-                draw_creditor_digit(2*(x+len(minuhend)-i)+1, 2*(y+1))
-                minuhend = minuhend[:-(i+1)] + str(int(minuhend[-(i+1)]) - 1) + minuhend[-i:]
-                self.width *= 2
-                self.height *= 2
+                with self.do_half:
+                    draw_creditor_digit = self.symbols[str(int(minuhend[-(i+1)]) - 1)]
+                    draw_creditor_digit(2*(x+len(minuhend)-i)+1, 2*(y+1))
+                    minuhend = minuhend[:-(i+1)] + str(int(minuhend[-(i+1)]) - 1) + minuhend[-i:]
                 self.slash(x+len(minuhend)-i+1, y)
-                self.width /= 2
-                self.height /= 2
-                self.one(2*(x+len(minuhend)+1-i), 2*(y+1))
-                draw_debtor_digit = self.symbols[minuhend[-i]]
-                draw_debtor_digit(2*(x+len(minuhend)+1-i)+1, 2*(y+1))
-                self.width *= 2
-                self.height *= 2
+                with self.do_half:
+                    self.one(2*(x+len(minuhend)+1-i), 2*(y+1))
+                    draw_debtor_digit = self.symbols[minuhend[-i]]
+                    draw_debtor_digit(2*(x+len(minuhend)+1-i)+1, 2*(y+1))
                 place_difference = int('1' + minuhend[-i]) - int(subtrahend[-i])
                 draw_result_digit = self.symbols[str(place_difference)]
                 draw_result_digit(x+len(minuhend)+1-i, y-2)                
