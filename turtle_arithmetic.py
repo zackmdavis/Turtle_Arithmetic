@@ -223,8 +223,8 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.penup()
 
     def statement(self, arg1, arg2, op, x, y):
-        args_length = max([len(a) for a in [arg1, arg2]])
-        args = [s.zfill(args_length) for s in [arg1, arg2]]
+        args_length = max([len(a) for a in (arg1, arg2)])
+        args = [s.zfill(args_length) for s in (arg1, arg2)]
         for i, s in enumerate(args):
             leading_zeros = True
             for j, figure in enumerate(s):
