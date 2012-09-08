@@ -2,6 +2,7 @@
 
 import tkinter
 import turtle
+from functools import partial
 
 class HalfTurtle(object):
     def __init__(self, turtle):
@@ -345,16 +346,16 @@ class TurtleArithmetic(tkinter.Tk):
         self.second_number_field.configure(width=5)
         self.second_number_field.grid(row=2, column=2, sticky='W')
 
-        self.add_button = tkinter.Button(self, text="Add", command=lambda: self.operation('+'))
+        self.add_button = tkinter.Button(self, text="Add", command=self.operation('+'))
         self.add_button.grid(row=3, column=0)
 
-        self.add_button = tkinter.Button(self, text="Subtract", command=lambda: self.operation('-'))
+        self.add_button = tkinter.Button(self, text="Subtract", command=self.operation('-'))
         self.add_button.grid(row=3, column=1)
 
-        self.add_button = tkinter.Button(self, text="Multiply", command=lambda: self.operation('x'))
+        self.add_button = tkinter.Button(self, text="Multiply", command=self.operation('x'))
         self.add_button.grid(row=3, column=2)
 
-        self.add_button = tkinter.Button(self, text="Divide", command=lambda: self.operation('/'))
+        self.add_button = tkinter.Button(self, text="Divide", command=self.operation('/'))
         self.add_button.grid(row=3, column=3)
 
         self.setting = turtle.TurtleScreen(self.turtle_canvas)
@@ -404,6 +405,9 @@ class TurtleArithmetic(tkinter.Tk):
             pass # TODO
 
     def operation(self, op):
+        return partial(self.do_operation, op)
+
+    def do_operation(self, op):
         # TODO: check for spaces---Python's int() handles them
         # intelligently, but my 'add' (&c.) method does not
         # also, leading zeros
