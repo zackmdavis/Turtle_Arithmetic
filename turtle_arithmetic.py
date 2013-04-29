@@ -2,6 +2,7 @@
 
 import tkinter
 import turtle
+from pdb import set_trace as debug
 
 class CalculatorTurtle(turtle.RawTurtle):
     
@@ -284,17 +285,20 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.forward(45)
 
     def multiply(self, factor1, factor2, x, y):
+        #debug()
         self.statement(factor1, factor2, 'x', x, y)
         factors_length = max(len(factor1), len(factor2))
         carry = 0
         summands = []
         for i in range(1, len(factor2)+1):
             for j in range(1, len(factor1)+1):
-                place_product = str((int(factor1[j])*int(factor2[i])) + carry)
+                place_product = str((int(factor1[-j])*int(factor2[-i])) + carry)
                 place_product = place_product.zfill(2)
-                if not (i == factors_length and place_product == '0'):
-                    draw_result_digit = self.symbols[place_product[-1]]
-                    draw_result_digit(x+factors_length-i-j, y-1-j)
+
+
+                # if not (i == factors_length and place_product == '0'):
+                #     draw_result_digit = self.symbols[place_product[-1]]
+                #     draw_result_digit(x+factors_length-i-j, y-1-j)
                 
 
     def divide(self, dividend, divisor, x, y):
