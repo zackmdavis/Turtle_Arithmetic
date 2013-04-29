@@ -10,7 +10,7 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.penup()
         self.width = 48
         self.height = 80
-        #self.speed(0) # max speed for testing purposes; comment out for demos
+        self.speed(0) # max speed for testing purposes; comment out (or use speed menu) for demos
         self.symbols = {'0':self.zero, '1':self.one, '2':self.two,
         '3':self.three, '4':self.four, '5':self.five, '6':self.six,
         '7':self.seven, '8':self.eight, '9':self.nine, '+':self.plus,
@@ -285,9 +285,17 @@ class CalculatorTurtle(turtle.RawTurtle):
 
     def multiply(self, factor1, factor2, x, y):
         self.statement(factor1, factor2, 'x', x, y)
-        for i, f2_digit in enumerate(factor2):
-            for j, f1_digit in enumerate(factor1):
-                pass # TODO
+        factors_length = max(len(factor1), len(factor2))
+        carry = 0
+        summands = []
+        for i in range(1, len(factor2)+1):
+            for j in range(1, len(factor1)+1):
+                place_product = str((int(factor1[j])*int(factor2[i])) + carry)
+                place_product = place_product.zfill(2)
+                if not (i == factors_length and place_product == '0'):
+                    draw_result_digit = self.symbols[place_product[-1]]
+                    draw_result_digit(x+factors_length-i-j, y-1-j)
+                
 
     def divide(self, dividend, divisor, x, y):
         pass # TODO
@@ -295,7 +303,7 @@ class CalculatorTurtle(turtle.RawTurtle):
 class TurtleArithmetic(tkinter.Tk):
     def __init__(self):
         tkinter.Tk.__init__(self)
-        self.title("Turtle Arithmetic (Unstable; in development)")
+        self.title("Turtle Arithmetic (in development)")
         self.resizable(width='FALSE', height='FALSE')
 
         self.menu_bar = tkinter.Menu(self)
