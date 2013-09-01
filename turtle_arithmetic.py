@@ -216,8 +216,6 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.forward(length*self.width)
         self.penup()
 
-
-
     def slash(self, x, y):
         self.penup()
         waypoint = self.make_block_waypoint(0, 1, x, y)
@@ -312,8 +310,33 @@ class CalculatorTurtle(turtle.RawTurtle):
                 #     draw_result_digit(x+factors_length-i-j, y-1-j)
                 
 
+    def division_tableau(self, x, y, length):
+        self.penup()
+        # maybe tweak first arg to -0.1ish for curved bar---
+        waypoint = self.make_block_waypoint(0, 0, x, y-1)
+        self.to_waypoint(waypoint)
+        self.pendown()
+        # straight bar, not as cool
+        waypoint = self.make_block_waypoint(0, 0, x, y)
+        self.to_waypoint(waypoint)
+        # curved bar #TODO calculate parameters of right-paren shape
+        # self.setheading(??)
+        # self.circle(self.height, ??)
+        self.bottom_line(x, y, length)
+
+    def division_statement(self, dividend, divisor, x, y):
+        self.penup()
+        for i, figure in enumerate(divisor):
+            draw_digit = self.symbols[figure]
+            draw_digit(x+i, y-1)
+        self.division_tableau(x+len(divisor), y, len(dividend))
+        for i, figure in enumerate(dividend):
+            draw_digit = self.symbols[figure]
+            draw_digit(x+len(divisor)+i, y-1)
+
     def divide(self, dividend, divisor, x, y):
-        pass # TODO
+        self.division_statement(dividend, divisor, x, y)
+        # TODO
 
 class TurtleArithmetic(tkinter.Tk):
     def __init__(self):
@@ -461,7 +484,7 @@ class TurtleArithmetic(tkinter.Tk):
         elif op == 'x':
             self.our_heroine.multiply(a, b, 2, 4)
         elif op == '/':
-            pass # TODO
+            self.our_heroine.divide(a, b, 2, 4)
         for i in range(2):
             self.appearance_menu.entryconfig(i, state=tkinter.NORMAL)
 
