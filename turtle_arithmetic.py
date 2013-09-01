@@ -2,20 +2,9 @@
 
 import tkinter
 import turtle
-from pdb import set_trace as debug
 from functools import partial
 
-class HalfTurtle(object):
-    def __init__(self, turtle):
-        self.turtle = turtle
-
-    def __enter__(self):
-        self.turtle.width /= 2
-        self.turtle.height /= 2
-
-    def __exit__(self, _type, _value, _traceback):
-        self.turtle.width *= 2
-        self.turtle.height *= 2
+from pdb import set_trace as debug
 
 class CalculatorTurtle(turtle.RawTurtle):    
     def __init__(self, canvas):
@@ -28,6 +17,19 @@ class CalculatorTurtle(turtle.RawTurtle):
         '3':self.three, '4':self.four, '5':self.five, '6':self.six,
         '7':self.seven, '8':self.eight, '9':self.nine, '+':self.plus,
         '-':self.minus}
+
+        class HalfTurtle(object):
+            def __init__(self, turtle):
+                self.turtle = turtle
+
+            def __enter__(self):
+                self.turtle.width /= 2
+                self.turtle.height /= 2
+
+            def __exit__(self, _type, _value, _traceback):
+                self.turtle.width *= 2
+                self.turtle.height *= 2
+
         self.do_half = HalfTurtle(self)
 
     def make_block_waypoint(self, a, b, x, y):
@@ -213,6 +215,8 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.setheading(0)
         self.forward(length*self.width)
         self.penup()
+
+
 
     def slash(self, x, y):
         self.penup()
