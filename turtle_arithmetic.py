@@ -294,21 +294,37 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.forward(45)
 
     def multiply(self, factor1, factor2, x, y):
-        #debug()
         self.statement(factor1, factor2, 'x', x, y)
         factors_length = max(len(factor1), len(factor2))
         carry = 0
-        summands = []
+        summands = [[0]*n for n in range(len(factor2))]
         for i in range(1, len(factor2)+1):
             for j in range(1, len(factor1)+1):
-                place_product = str((int(factor1[-j])*int(factor2[-i])) + carry)
-                place_product = place_product.zfill(2)
-
-
-                # if not (i == factors_length and place_product == '0'):
-                #     draw_result_digit = self.symbols[place_product[-1]]
-                #     draw_result_digit(x+factors_length-i-j, y-1-j)
-                
+                place_product = (int(factor1[-j])*int(factor2[-i]))
+                place_product += carry
+                place_product = str(place_product).zfill(2)
+                draw_result_digit = self.symbols[place_product[-1]]
+                draw_result_digit(x+factors_length-i-j+2, y-1-i)
+                summands[i-1].append(int(place_product[-1]))
+                carry = int(place_product[-2])
+                if j == len(factor1):
+                    draw_last_digit = self.symbols[place_product[-2]]
+                    draw_last_digit(x+factors_length-i-j+1, y-1-i)
+                    summands[i-1].append(int(place_product[-2]))
+                    carry = 0
+        summands_length = max(len(s) for s in summands)
+        self.bottom_line(x-(summands_length-factors_length)+1, y-len(factor2)-1, summands_length)
+        for s in summands:
+            for p in range(summands_length - len(s)):
+                s.append(0)
+        summands.append([0]*summands_length) # carry digits
+        for p in range(1, summands_length+1):
+            place_sum = str(sum(s[p-1] for s in summands))
+            draw_final_digit = self.symbols[place_sum[-1]]
+            draw_final_digit(x+factors_length-p+1, y-len(factor2)-2)
+            for i, d in enumerate(map(int, reversed(list(place_sum[:-1])))):
+                summands[-1][p+i] += d
+                # but also need to support final carry into result
 
     def division_tableau(self, x, y, length):
         self.penup()
@@ -482,9 +498,9 @@ class TurtleArithmetic(tkinter.Tk):
             self.our_heroine.subtract(a, b, 1, (self.canvas_height/true_blocks[1])-2)
 
         elif op == 'x':
-            self.our_heroine.multiply(a, b, 2, 4)
+            self.our_heroine.multiply(a, b, 2, 5)
         elif op == '/':
-            self.our_heroine.divide(a, b, 2, 4)
+            self.our_heroine.divide(a, b, 2, 5)
         for i in range(2):
             self.appearance_menu.entryconfig(i, state=tkinter.NORMAL)
 
