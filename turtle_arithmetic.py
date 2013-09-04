@@ -479,6 +479,11 @@ class TurtleArithmetic(tkinter.Tk):
                 error_tail = '"' + nonnumbers[0] + '" and "' + nonnumbers[1] + '" are not numbers.'
             tkinter.messagebox.showerror("Turtle Comprehension Error", "The turtle doesn't understand: " + error_tail)
             return
+        elif m < 0 or n < 0:
+            tkinter.messagebox.showerror("Turtle Ignorant of Negative Numbers", "The turtle doesn't understand negative numbers.")
+            for i in range(2):
+                self.appearance_menu.entryconfig(i, state=tkinter.NORMAL)
+            return
         for i in range(2):
             self.appearance_menu.entryconfig(i, state=tkinter.DISABLED)
         self.our_heroine.clear()
