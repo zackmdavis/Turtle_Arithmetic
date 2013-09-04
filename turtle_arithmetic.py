@@ -208,6 +208,10 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.circle(-0.5*self.width, 60)
         self.penup()
 
+    def number(self, digits, x, y):
+        for i, d in enumerate(digits):
+            self.symbols[d](x+i, y)
+
     def statement(self, arg1, arg2, op, x, y):
         args_length = max([len(a) for a in (arg1, arg2)])
         args = [s.zfill(args_length) for s in (arg1, arg2)]
@@ -334,7 +338,18 @@ class CalculatorTurtle(turtle.RawTurtle):
 
     def divide(self, dividend, divisor, x, y):
         self.division_statement(dividend, divisor, x, y)
-        # TODO
+        place_dividend = dividend[0]
+        place_div_index = 0
+        while int(place_dividend) < int(divisor):
+            place_div_index += 1
+            place_dividend += dividend[place_div_index]
+        place_quotient, place_remainder = map(str, divmod(int(place_dividend), int(divisor)))
+        draw_result_digit = self.symbols[place_quotient]
+        draw_result_digit(x+place_div_index+2, y)
+        place_subtrahend = str(int(place_quotient)*int(divisor))
+        self.number(place_subtrahend, x+place_div_index+1, y-2)
+        self.bottom_line(x+place_div_index+1, y-2, len(place_subtrahend))
+        # TODO: to be continued ...
 
 class TurtleArithmetic(tkinter.Tk):
     def __init__(self):
