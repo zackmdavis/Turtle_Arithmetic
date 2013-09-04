@@ -308,6 +308,7 @@ class CalculatorTurtle(turtle.RawTurtle):
             for i, d in enumerate(map(int, reversed(list(place_sum[:-1])))):
                 summands[-1][p+i] += d
                 # but also need to support final carry into result
+                # wait, perhaps not
 
     def division_tableau(self, x, y, length):
         self.penup()
@@ -446,7 +447,7 @@ class TurtleArithmetic(tkinter.Tk):
         # TODO: check for spaces---Python's int() handles them
         # intelligently, but my 'add' (&c.) method does not
         # also, leading zeros
-        a, b = self.first_number_field.get(), self.second_number_field.get()
+        a, b = self.first_number_field.get().strip(), self.second_number_field.get().strip()
         nonnumbers = []
         try:
             m = int(a)
