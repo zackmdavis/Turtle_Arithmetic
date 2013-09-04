@@ -328,28 +328,30 @@ class CalculatorTurtle(turtle.RawTurtle):
 
     def division_statement(self, dividend, divisor, x, y):
         self.penup()
-        for i, figure in enumerate(divisor):
-            draw_digit = self.symbols[figure]
-            draw_digit(x+i, y-1)
+        self.number(divisor, x, y-1)
         self.division_tableau(x+len(divisor), y, len(dividend))
-        for i, figure in enumerate(dividend):
-            draw_digit = self.symbols[figure]
-            draw_digit(x+len(divisor)+i, y-1)
+        self.number(dividend, x+len(divisor), y-1)
 
     def divide(self, dividend, divisor, x, y):
+        # WRONG
         self.division_statement(dividend, divisor, x, y)
-        place_dividend = dividend[0]
         place_div_index = 0
+        place_dividend = dividend[0]
         while int(place_dividend) < int(divisor):
             place_div_index += 1
-            place_dividend += dividend[place_div_index]
-        place_quotient, place_remainder = map(str, divmod(int(place_dividend), int(divisor)))
-        draw_result_digit = self.symbols[place_quotient]
-        draw_result_digit(x+place_div_index+2, y)
-        place_subtrahend = str(int(place_quotient)*int(divisor))
-        self.number(place_subtrahend, x+place_div_index+1, y-2)
-        self.bottom_line(x+place_div_index+1, y-2, len(place_subtrahend))
-        # TODO: to be continued ...
+            try:
+                place_dividend += dividend[place_div_index]
+            except IndexError:
+                break
+        for i in range(len(dividend[place_div_index:])):
+            place_quotient = str(int(place_dividend)//int(divisor))
+            self.symbols[place_quotient](x+len(divisor)+place_div_index, y)
+            place_subtrahend = str(int(place_quotient)*int(divisor))
+            self.number(place_subtrahend, x+len(divisor)+place_div_index-len(place_subtrahend)+1+i, y-2*(i+1))
+            self.bottom_line(x+len(divisor)+place_div_index-len(place_subtrahend)+1+i, y-2*(i+1), len(place_subtrahend))
+            place_dividend = str(int(place_dividend) - int(place_subtrahend))
+            place_dividend += dividend[place_div_index+i+1]
+            self.number(place_dividend, x+len(divisor)+place_div_index-len(place_dividend)+2+i, y-2*(i+1)+1) 
 
 class TurtleArithmetic(tkinter.Tk):
     def __init__(self):
