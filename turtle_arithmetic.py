@@ -225,6 +225,22 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.to_waypoint(waypoint)
         self.penup()
 
+    def r(self, x, y):
+        # TODO: a better 'r' is possible
+        self.penup()
+        waypoint = self.make_block_waypoint(0.2, 0.5, x, y)
+        self.to_waypoint(waypoint)
+        self.setheading(-90)
+        self.pendown()
+        self.forward(0.4*self.height)
+        self.penup()
+        self.setheading(90)
+        self.forward(0.35*self.height)
+        self.pendown()
+        self.setheading(15)
+        self.circle(-0.5*self.width, 60)
+        self.penup()
+
     def statement(self, arg1, arg2, op, x, y):
         args_length = max([len(a) for a in (arg1, arg2)])
         args = [s.zfill(args_length) for s in (arg1, arg2)]
