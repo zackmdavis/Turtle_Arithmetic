@@ -32,10 +32,8 @@ class CalculatorTurtle(turtle.RawTurtle):
 
         self.do_half = HalfTurtle(self)
 
-    def make_block_waypoint(self, a, b, x, y):
-        return ((x+a)*self.width, (y+b)*self.height)
-
-    def to_waypoint(self, wp):
+    def to_waypoint(self, a, b, x, y):
+        wp = ((x+a)*self.width, (y+b)*self.height)
         self.setheading(self.towards(wp[0], wp[1]))
         self.forward(self.distance(wp[0], wp[1]))
 
@@ -46,8 +44,7 @@ class CalculatorTurtle(turtle.RawTurtle):
     def zero(self, x, y):
         # TODO: make this a proper elliptical zero, rather than a small circle
         self.penup()
-        waypoint = self.make_block_waypoint(0.8, 0.5, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.8, 0.5, x, y)
         self.pendown()
         self.setheading(90)
         self.circle(0.3*self.width)
@@ -56,8 +53,7 @@ class CalculatorTurtle(turtle.RawTurtle):
     def one(self, x, y):
         # TODO?-- a better numeral "1" than just a straight line?
         self.penup()
-        waypoint = self.make_block_waypoint(0.5, 0.8, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.5, 0.8, x, y)
         self.pendown()
         self.setheading(270)
         self.forward(0.6*self.height)
@@ -66,22 +62,18 @@ class CalculatorTurtle(turtle.RawTurtle):
     def two(self, x, y):
         # TODO: This isn't such a terrible "2" but it could probably be better
         self.penup()
-        waypoint = self.make_block_waypoint(0.2, 0.6, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.2, 0.6, x, y)
         self.pendown()
         self.setheading(90)
         self.circle(-0.3*self.width, 180)
-        waypoint = self.make_block_waypoint(0.2, 0.2, x, y)
-        self.to_waypoint(waypoint)
-        waypoint = self.make_block_waypoint(0.8, 0.2, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.2, 0.2, x, y)
+        self.to_waypoint(0.8, 0.2, x, y)
         self.penup()
 
     def three(self, x, y):
         # TODO: Not terrible "3"; could be more natural
         self.penup()
-        waypoint = self.make_block_waypoint(0.2, 0.7, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.2, 0.7, x, y)
         self.pendown()
         self.setheading(45)
         self.circle(-0.15*self.height, 225)
@@ -92,31 +84,23 @@ class CalculatorTurtle(turtle.RawTurtle):
     def four(self, x, y):
         # TODO: this is a crappy "4" in more ways than one
         self.penup()
-        waypoint = self.make_block_waypoint(0.2, 0.8, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.2, 0.8, x, y)
         self.pendown()
-        waypoint = self.make_block_waypoint(0.2, 0.4, x, y)
-        self.to_waypoint(waypoint)
-        waypoint = self.make_block_waypoint(0.8, 0.4, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.2, 0.4, x, y)
+        self.to_waypoint(0.8, 0.4, x, y)
         self.penup()
-        waypoint = self.make_block_waypoint(0.8, 0.8, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.8, 0.8, x, y)
         self.pendown()
-        waypoint = self.make_block_waypoint(0.8, 0.2, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.8, 0.2, x, y)
         self.penup()
 
     def five(self, x, y):
         # TODO: design a better "5"
         self.penup()
-        waypoint = self.make_block_waypoint(0.8, 0.8, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.8, 0.8, x, y)
         self.pendown()
-        waypoint = self.make_block_waypoint(0.2, 0.8, x, y)
-        self.to_waypoint(waypoint)
-        waypoint = self.make_block_waypoint(0.2, 0.5, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.2, 0.8, x, y)
+        self.to_waypoint(0.2, 0.5, x, y)
         self.setheading(0)
         self.forward(0.3*self.width)
         self.circle(-0.15*self.height, 240)
@@ -125,8 +109,7 @@ class CalculatorTurtle(turtle.RawTurtle):
     def six(self, x, y):
         # TODO: more natural "6"
         self.penup()
-        waypoint = self.make_block_waypoint(0.8, 0.7, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.8, 0.7, x, y)
         self.pendown()
         self.setheading(90)
         self.circle(0.3*self.width, 180)
@@ -137,20 +120,16 @@ class CalculatorTurtle(turtle.RawTurtle):
     def seven(self, x, y):
         # TODO: more natural "7"
         self.penup()
-        waypoint = self.make_block_waypoint(0.2, 0.8, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.2, 0.8, x, y)
         self.pendown()
-        waypoint = self.make_block_waypoint(0.8, 0.8, x, y)
-        self.to_waypoint(waypoint)
-        waypoint = self.make_block_waypoint(0.2, 0.2, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.8, 0.8, x, y)
+        self.to_waypoint(0.2, 0.2, x, y)
         self.penup()
 
     def eight(self, x, y):
         # TODO: more natural "8"
         self.penup()
-        waypoint = self.make_block_waypoint(0.5, 0.5, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.5, 0.5, x, y)
         self.pendown()
         self.setheading(0)
         self.circle(0.15*self.height)
@@ -160,8 +139,7 @@ class CalculatorTurtle(turtle.RawTurtle):
     def nine(self, x, y):
         # TODO: more natural "9"
         self.penup()
-        waypoint = self.make_block_waypoint(0.8, 0.7, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.8, 0.7, x, y)
         self.pendown()
         self.setheading(270)
         self.circle(-0.3*self.width)
@@ -170,14 +148,12 @@ class CalculatorTurtle(turtle.RawTurtle):
 
     def plus(self, x, y):
         self.penup()
-        waypoint = self.make_block_waypoint(0.1, 0.5, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.1, 0.5, x, y)
         self.pendown()
         self.setheading(0)
         self.forward(0.8*self.width)
         self.penup()
-        waypoint = self.make_block_waypoint(0.5, 0.74, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.5, 0.74, x, y)
         self.pendown()
         self.setheading(270)
         self.forward(0.48*self.height)
@@ -185,8 +161,7 @@ class CalculatorTurtle(turtle.RawTurtle):
 
     def minus(self, x, y):
         self.penup()
-        waypoint = self.make_block_waypoint(0.1, 0.5, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.1, 0.5, x, y)
         self.pendown()
         self.setheading(0)
         self.forward(0.8*self.width)
@@ -194,23 +169,18 @@ class CalculatorTurtle(turtle.RawTurtle):
 
     def times(self, x, y):
         self.penup()
-        waypoint = self.make_block_waypoint(0.1, 0.74, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.1, 0.74, x, y)
         self.pendown()
-        waypoint = self.make_block_waypoint(0.9, 0.26, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.9, 0.26, x, y)
         self.penup()
-        waypoint = self.make_block_waypoint(0.9, 0.74, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.9, 0.74, x, y)
         self.pendown()
-        waypoint = self.make_block_waypoint(0.1, 0.26, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.1, 0.26, x, y)
         self.penup()
 
     def bottom_line(self, x, y, length):
         self.penup()
-        waypoint = self.make_block_waypoint(0, 0, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0, 0, x, y)
         self.pendown()
         self.setheading(0)
         self.forward(length*self.width)
@@ -218,18 +188,15 @@ class CalculatorTurtle(turtle.RawTurtle):
 
     def slash(self, x, y):
         self.penup()
-        waypoint = self.make_block_waypoint(0, 1, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0, 1, x, y)
         self.pendown()
-        waypoint = self.make_block_waypoint(1, 0, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(1, 0, x, y)
         self.penup()
 
     def r(self, x, y):
         # TODO: a better 'r' is possible
         self.penup()
-        waypoint = self.make_block_waypoint(0.2, 0.5, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0.2, 0.5, x, y)
         self.setheading(-90)
         self.pendown()
         self.forward(0.4*self.height)
@@ -345,12 +312,10 @@ class CalculatorTurtle(turtle.RawTurtle):
     def division_tableau(self, x, y, length):
         self.penup()
         # maybe tweak first arg to -0.1ish for curved bar---
-        waypoint = self.make_block_waypoint(0, 0, x, y-1)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0, 0, x, y-1)
         self.pendown()
         # straight bar, not as cool
-        waypoint = self.make_block_waypoint(0, 0, x, y)
-        self.to_waypoint(waypoint)
+        self.to_waypoint(0, 0, x, y)
         # curved bar #TODO calculate parameters of right-paren shape
         # self.setheading(??)
         # self.circle(self.height, ??)
