@@ -18,19 +18,20 @@ class CalculatorTurtle(turtle.RawTurtle):
         '7':self.seven, '8':self.eight, '9':self.nine, '+':self.plus,
         '-':self.minus}
 
-        class HalfTurtle(object):
-            def __init__(self, turtle):
+        class ResizedTurtle:
+            def __init__(self, turtle, factor):
                 self.turtle = turtle
+                self.factor = factor
 
             def __enter__(self):
-                self.turtle.width /= 2
-                self.turtle.height /= 2
+                self.turtle.width *= self.factor
+                self.turtle.height *= self.factor
 
             def __exit__(self, _type, _value, _traceback):
-                self.turtle.width *= 2
-                self.turtle.height *= 2
+                self.turtle.width /= self.factor
+                self.turtle.height /= self.factor
 
-        self.do_half = HalfTurtle(self)
+        self.do_half = ResizedTurtle(self, 0.5)
 
     def to_waypoint(self, a, b, x, y):
         wp = ((x+a)*self.width, (y+b)*self.height)
