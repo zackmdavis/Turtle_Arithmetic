@@ -333,26 +333,26 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.number(dividend, x+len(divisor), y-1)
 
     def divide(self, dividend, divisor, x, y):
-        # STILL WRONG
         self.division_statement(dividend, divisor, x, y)
         i = 0
-        while int(dividend[:i+1]) < int(divisor):
+        while int(dividend[:i+1]) < int(divisor) and i < len(dividend)-1:
             i += 1
         place_dividend = dividend[:i]
         for j, d in enumerate(dividend[i:]):
             place_dividend += d
             place_quotient = str(int(place_dividend)//int(divisor))
             self.number(place_quotient, x+len(divisor)+i+j, y)
-            place_subtrahend = int(place_quotient)*divisor
-            self.number(place_subtrahend, x+len(divisor)+i+j-(len(place_subtrahend)-1), (-2)*(j+1))
-            self.bottom_line(x+len(divisor)+i+j-(len(place_subtrahend)-1), (-2)*(j+1), len(place_subtrahend))
+            place_subtrahend = str(int(place_quotient)*int(divisor))
+            self.number(place_subtrahend, x+len(divisor)+i+j-(len(place_subtrahend)-1), y+(-2)*(j+1))
+            self.bottom_line(x+len(divisor)+i+j-(len(place_subtrahend)-1), y+(-2)*(j+1), len(place_subtrahend))
             place_dividend = str(int(place_dividend)-int(place_subtrahend))
-            self.number(place_dividend, x+len(divisor)+i+j-(len(place_dividend)-1), (-2)*(j+1)-1)
+            self.number(place_dividend, x+len(divisor)+i+j-(len(place_dividend)-1), y+(-2)*(j+1)-1)
             if j != len(dividend[i:])-1:
-                self.symbols[dividend[i+j+1]](x+len(divisor)+i+j-(len(place_dividend)), (-2)*(j+1)-1)
+                self.symbols[dividend[i+j+1]](x+len(divisor)+i+j+1, y+(-2)*(j+1)-1)
         remainder = place_dividend
-        self.r(x+len(divisor)+len(dividend), 0)
-        self.number(remainder, x+len(divisor)+len(dividend)+1, 0)
+        self.r(x+len(divisor)+len(dividend), y)
+        self.number(remainder, x+len(divisor)+len(dividend)+1, y)
+        self.forward(20)
 
 class TurtleArithmetic(tkinter.Tk):
     def __init__(self):
@@ -505,7 +505,8 @@ class TurtleArithmetic(tkinter.Tk):
         elif op == 'x':
             self.our_heroine.multiply(a, b, 2, 5)
         elif op == '/':
-            self.our_heroine.divide(a, b, 2, 5)
+            with self.our_heroine.do_half:
+                self.our_heroine.divide(a, b, 2, 11)
         for i in range(2):
             self.appearance_menu.entryconfig(i, state=tkinter.NORMAL)
 
