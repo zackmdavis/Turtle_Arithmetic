@@ -333,25 +333,26 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.number(dividend, x+len(divisor), y-1)
 
     def divide(self, dividend, divisor, x, y):
-        # WRONG
+        # STILL WRONG
         self.division_statement(dividend, divisor, x, y)
-        place_div_index = 0
-        place_dividend = dividend[0]
-        while int(place_dividend) < int(divisor):
-            place_div_index += 1
-            try:
-                place_dividend += dividend[place_div_index]
-            except IndexError:
-                break
-        for i in range(len(dividend[place_div_index:])):
+        i = 0
+        while int(dividend[:i+1]) < int(divisor):
+            i += 1
+        place_dividend = dividend[:i]
+        for j, d in enumerate(dividend[i:]):
+            place_dividend += d
             place_quotient = str(int(place_dividend)//int(divisor))
-            self.symbols[place_quotient](x+len(divisor)+place_div_index, y)
-            place_subtrahend = str(int(place_quotient)*int(divisor))
-            self.number(place_subtrahend, x+len(divisor)+place_div_index-len(place_subtrahend)+1+i, y-2*(i+1))
-            self.bottom_line(x+len(divisor)+place_div_index-len(place_subtrahend)+1+i, y-2*(i+1), len(place_subtrahend))
-            place_dividend = str(int(place_dividend) - int(place_subtrahend))
-            place_dividend += dividend[place_div_index+i+1]
-            self.number(place_dividend, x+len(divisor)+place_div_index-len(place_dividend)+2+i, y-2*(i+1)+1) 
+            self.number(place_quotient, x+len(divisor)+i+j, y)
+            place_subtrahend = int(place_quotient)*divisor
+            self.number(place_subtrahend, x+len(divisor)+i+j-(len(place_subtrahend)-1), (-2)*(j+1))
+            self.bottom_line(x+len(divisor)+i+j-(len(place_subtrahend)-1), (-2)*(j+1), len(place_subtrahend))
+            place_dividend = str(int(place_dividend)-int(place_subtrahend))
+            self.number(place_dividend, x+len(divisor)+i+j-(len(place_dividend)-1), (-2)*(j+1)-1)
+            if j != len(dividend[i:])-1:
+                self.symbols[dividend[i+j+1]](x+len(divisor)+i+j-(len(place_dividend)), (-2)*(j+1)-1)
+        remainder = place_dividend
+        self.r(x+len(divisor)+len(dividend), 0)
+        self.number(remainder, x+len(divisor)+len(dividend)+1, 0)
 
 class TurtleArithmetic(tkinter.Tk):
     def __init__(self):
