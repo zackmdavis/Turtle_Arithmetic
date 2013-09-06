@@ -13,10 +13,9 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.width = 48
         self.height = 80
         self.speed(0) # max speed for testing purposes; comment out (or use speed menu) for demos
-        self.symbols = {'0':self.zero, '1':self.one, '2':self.two,
+        self.digits = {'0':self.zero, '1':self.one, '2':self.two,
         '3':self.three, '4':self.four, '5':self.five, '6':self.six,
-        '7':self.seven, '8':self.eight, '9':self.nine, '+':self.plus,
-        '-':self.minus}
+        '7':self.seven, '8':self.eight, '9':self.nine}
 
         class ResizedTurtle:
             def __init__(self, turtle, factor):
@@ -211,7 +210,7 @@ class CalculatorTurtle(turtle.RawTurtle):
 
     def number(self, digits, x, y):
         for i, d in enumerate(digits):
-            self.symbols[d](x+i, y)
+            self.digits[d](x+i, y)
 
     def statement(self, arg1, arg2, op, x, y):
         args_length = max([len(a) for a in (arg1, arg2)])
@@ -221,7 +220,7 @@ class CalculatorTurtle(turtle.RawTurtle):
             for j, figure in enumerate(s):
                 if not leading_zeros or figure!='0' or j == args_length-1:
                     leading_zeros = False
-                    draw_digit = self.symbols[figure]
+                    draw_digit = self.digits[figure]
                     draw_digit(x+j+1, y-i)
             if i == len(args)-2:
                 if op == '+':
@@ -243,10 +242,10 @@ class CalculatorTurtle(turtle.RawTurtle):
             place_sum += carry
             place_sum = str(place_sum).zfill(2)
             if not (i==summands_length and place_sum[-1]=='0'):
-                draw_result_digit = self.symbols[place_sum[-1]]
+                draw_result_digit = self.digits[place_sum[-1]]
                 draw_result_digit(x+summands_length-i, y-2)
             if place_sum[-2]!='0':
-                draw_carry_digit = self.symbols[place_sum[-2]]
+                draw_carry_digit = self.digits[place_sum[-2]]
                 draw_carry_digit(x+summands_length-1-i, y+1)
             carry = int(place_sum[-2])
         self.forward(45)
@@ -260,7 +259,7 @@ class CalculatorTurtle(turtle.RawTurtle):
         for i in range(1, len(minuhend)+1):
             place_difference = int(minuhend[-i]) - int(subtrahend[-i])
             if place_difference >= 0:
-                draw_result_digit = self.symbols[str(place_difference)]
+                draw_result_digit = self.digits[str(place_difference)]
                 draw_result_digit(x+len(minuhend)+1-i, y-2)
             else:
                 # I worry that temporarily adjusting the length and
@@ -268,16 +267,16 @@ class CalculatorTurtle(turtle.RawTurtle):
                 # it be done?
                 self.slash(x+len(minuhend)-i, y)
                 with self.do_half:
-                    draw_creditor_digit = self.symbols[str(int(minuhend[-(i+1)]) - 1)]
+                    draw_creditor_digit = self.digits[str(int(minuhend[-(i+1)]) - 1)]
                     draw_creditor_digit(2*(x+len(minuhend)-i)+1, 2*(y+1))
                     minuhend = minuhend[:-(i+1)] + str(int(minuhend[-(i+1)]) - 1) + minuhend[-i:]
                 self.slash(x+len(minuhend)-i+1, y)
                 with self.do_half:
                     self.one(2*(x+len(minuhend)+1-i), 2*(y+1))
-                    draw_debtor_digit = self.symbols[minuhend[-i]]
+                    draw_debtor_digit = self.digits[minuhend[-i]]
                     draw_debtor_digit(2*(x+len(minuhend)+1-i)+1, 2*(y+1))
                 place_difference = int('1' + minuhend[-i]) - int(subtrahend[-i])
-                draw_result_digit = self.symbols[str(place_difference)]
+                draw_result_digit = self.digits[str(place_difference)]
                 draw_result_digit(x+len(minuhend)+1-i, y-2)                
         self.forward(45)
 
@@ -291,12 +290,12 @@ class CalculatorTurtle(turtle.RawTurtle):
                 place_product = (int(factor1[-j])*int(factor2[-i]))
                 place_product += carry
                 place_product = str(place_product).zfill(2)
-                draw_result_digit = self.symbols[place_product[-1]]
+                draw_result_digit = self.digits[place_product[-1]]
                 draw_result_digit(x+factors_length-i-j+2, y-1-i)
                 summands[i-1].append(int(place_product[-1]))
                 carry = int(place_product[-2])
                 if j == len(factor1):
-                    draw_last_digit = self.symbols[place_product[-2]]
+                    draw_last_digit = self.digits[place_product[-2]]
                     draw_last_digit(x+factors_length-i-j+1, y-1-i)
                     summands[i-1].append(int(place_product[-2]))
                     carry = 0
@@ -308,7 +307,7 @@ class CalculatorTurtle(turtle.RawTurtle):
         summands.append([0]*summands_length) # carry digits
         for p in range(1, summands_length+1):
             place_sum = str(sum(s[p-1] for s in summands))
-            draw_final_digit = self.symbols[place_sum[-1]]
+            draw_final_digit = self.digits[place_sum[-1]]
             draw_final_digit(x+factors_length-p+1, y-len(factor2)-2)
             for i, d in enumerate(map(int, reversed(list(place_sum[:-1])))):
                 summands[-1][p+i] += d
@@ -349,7 +348,7 @@ class CalculatorTurtle(turtle.RawTurtle):
             place_dividend = str(int(place_dividend)-int(place_subtrahend))
             self.number(place_dividend, x+len(divisor)+i+j-(len(place_dividend)-1), y+(-2)*(j+1)-1)
             if j != len(dividend[i:])-1:
-                self.symbols[dividend[i+j+1]](x+len(divisor)+i+j+1, y+(-2)*(j+1)-1)
+                self.digits[dividend[i+j+1]](x+len(divisor)+i+j+1, y+(-2)*(j+1)-1)
         remainder = place_dividend
         self.r(x+len(divisor)+len(dividend), y)
         self.number(remainder, x+len(divisor)+len(dividend)+1, y)
