@@ -2,6 +2,7 @@
 
 import tkinter
 import turtle
+from math import sin, cos, radians
 from functools import partial
 
 from pdb import set_trace as debug
@@ -37,30 +38,29 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.setheading(self.towards(wp[0], wp[1]))
         self.forward(self.distance(wp[0], wp[1]))
 
-    # Note the many TODOs below; I should redesign all the digits,
-    # but I made these sloppy digits first because I'm inspired by the
-    # vision of having a minimal viable program as soon as possible
+    def hit_waypoints(self, points, x, y):
+        for p in points:
+            self.to_waypoint(*(p+(x,y)))
 
     def zero(self, x, y):
-        # TODO: make this a proper elliptical zero, rather than a small circle
         self.penup()
-        self.to_waypoint(0.8, 0.5, x, y)
+        n = 14
+        angles = [((360/n)*i + 90)%360 for i in range(n,-1,-1)]
+        points = list(map(lambda t: (0.3*cos(radians(t))+0.5, 0.3*sin(radians(t))+0.5), angles))
+        self.to_waypoint(*(points[0]+(x,y)))
         self.pendown()
-        self.setheading(90)
-        self.circle(0.3*self.width)
+        self.hit_waypoints(points, x, y)
         self.penup()
 
     def one(self, x, y):
-        # TODO?-- a better numeral "1" than just a straight line?
         self.penup()
-        self.to_waypoint(0.5, 0.8, x, y)
+        points = [(0.5, 0.8), (0.5, 0.2)]
+        self.to_waypoint(*(points[0]+(x,y)))
         self.pendown()
-        self.setheading(270)
-        self.forward(0.6*self.height)
+        self.hit_waypoints(points, x, y)
         self.penup()
 
     def two(self, x, y):
-        # TODO: This isn't such a terrible "2" but it could probably be better
         self.penup()
         self.to_waypoint(0.2, 0.6, x, y)
         self.pendown()
@@ -71,27 +71,26 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.penup()
 
     def three(self, x, y):
-        # TODO: Not terrible "3"; could be more natural
         self.penup()
-        self.to_waypoint(0.2, 0.7, x, y)
+        self.to_waypoint(0.25, 0.65, x, y)
         self.pendown()
-        self.setheading(45)
-        self.circle(-0.15*self.height, 225)
+        self.setheading(90)
+        self.circle(-0.15*self.height, 270)
         self.setheading(0)
-        self.circle(-0.15*self.height, 225)
+        self.circle(-0.15*self.height, 270)
         self.penup()
 
     def four(self, x, y):
-        # TODO: this is a crappy "4" in more ways than one
         self.penup()
-        self.to_waypoint(0.2, 0.8, x, y)
+        points = [(0.2, 0.8), (0.2, 0.5), (0.8, 0.5)]
+        self.to_waypoint(*(points[0]+(x,y)))
         self.pendown()
-        self.to_waypoint(0.2, 0.4, x, y)
-        self.to_waypoint(0.8, 0.4, x, y)
+        self.hit_waypoints(points, x, y)
         self.penup()
-        self.to_waypoint(0.8, 0.8, x, y)
+        points = [(0.8, 0.8), (0.8, 0.2)]
+        self.to_waypoint(*(points[0]+(x,y)))
         self.pendown()
-        self.to_waypoint(0.8, 0.2, x, y)
+        self.hit_waypoints(points, x, y)
         self.penup()
 
     def five(self, x, y):
