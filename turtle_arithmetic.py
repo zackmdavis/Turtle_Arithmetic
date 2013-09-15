@@ -94,30 +94,26 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.penup()
 
     def five(self, x, y):
-        # TODO: design a better "5"
         self.penup()
-        self.to_waypoint(0.8, 0.8, x, y)
+        points = [(0.8, 0.8), (0.2, 0.8), (0.2, 0.5)]
+        self.to_waypoint(*(points[0]+(x,y)))
         self.pendown()
-        self.to_waypoint(0.2, 0.8, x, y)
-        self.to_waypoint(0.2, 0.5, x, y)
-        self.setheading(0)
-        self.forward(0.3*self.width)
-        self.circle(-0.15*self.height, 240)
+        self.hit_waypoints(points, x, y)
+        self.setheading(40)
+        self.circle(-0.195*self.height, 260)
         self.penup()
 
     def six(self, x, y):
-        # TODO: more natural "6"
         self.penup()
-        self.to_waypoint(0.8, 0.7, x, y)
+        self.to_waypoint(0.8, 0.65, x, y)
         self.pendown()
         self.setheading(90)
         self.circle(0.3*self.width, 180)
-        self.forward(0.4*self.height)
+        self.forward(0.3*self.height)
         self.circle(0.3*self.width)
         self.penup()
 
     def seven(self, x, y):
-        # TODO: more natural "7"
         self.penup()
         self.to_waypoint(0.2, 0.8, x, y)
         self.pendown()
@@ -126,23 +122,23 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.penup()
 
     def eight(self, x, y):
-        # TODO: more natural "8"
         self.penup()
-        self.to_waypoint(0.5, 0.5, x, y)
+        self.to_waypoint(0.5, 0.85, x, y)
         self.pendown()
         self.setheading(0)
-        self.circle(0.15*self.height)
-        self.circle(-0.15*self.height)
+        self.circle(-0.17*self.height, 180)
+        self.circle(0.17*self.height, 180)
+        self.circle(0.17*self.height, 180)
+        self.circle(-0.17*self.height, 180)
         self.penup()
 
     def nine(self, x, y):
-        # TODO: more natural "9"
         self.penup()
         self.to_waypoint(0.8, 0.7, x, y)
         self.pendown()
         self.setheading(270)
         self.circle(-0.3*self.width)
-        self.forward(0.6*self.height)
+        self.forward(0.5*self.height)
         self.penup()
 
     def plus(self, x, y):
@@ -187,9 +183,9 @@ class CalculatorTurtle(turtle.RawTurtle):
 
     def slash(self, x, y):
         self.penup()
-        self.to_waypoint(0, 1, x, y)
+        self.to_waypoint(0.15, 0.85, x, y)
         self.pendown()
-        self.to_waypoint(1, 0, x, y)
+        self.to_waypoint(0.85, 0.15, x, y)
         self.penup()
 
     def r(self, x, y):
