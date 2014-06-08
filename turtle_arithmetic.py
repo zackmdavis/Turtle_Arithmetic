@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import tkinter
 import turtle
@@ -13,10 +13,15 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.penup()
         self.width = 48
         self.height = 80
-        self.speed(0) # max speed for testing purposes; comment out (or use speed menu) for demos
-        self.digits = {'0':self.zero, '1':self.one, '2':self.two,
-        '3':self.three, '4':self.four, '5':self.five, '6':self.six,
-        '7':self.seven, '8':self.eight, '9':self.nine}
+        # max speed for testing purposes; comment out (or use speed
+        # menu) for demos
+        self.speed(0)
+        self.digits = {
+            '0':self.zero, '1':self.one, '2':self.two,
+            '3':self.three, '4':self.four, '5':self.five,
+            '6':self.six, '7':self.seven, '8':self.eight,
+            '9':self.nine
+        }
 
         class ResizedTurtle:
             def __init__(self, turtle, factor):
@@ -229,17 +234,18 @@ class CalculatorTurtle(turtle.RawTurtle):
         return args
 
     def add(self, summand1, summand2, x, y):
-        summands = ['0'+s for s in self.statement(summand1, summand2, '+', x, y)]
+        summands = ['0'+s for s in
+                    self.statement(summand1, summand2, '+', x, y)]
         summands_length = len(summands[0])
         carry = 0
         for i in range(1, summands_length+1):
             place_sum = sum([int(s[-i]) for s in summands])
             place_sum += carry
             place_sum = str(place_sum).zfill(2)
-            if not (i==summands_length and place_sum[-1]=='0'):
+            if not (i == summands_length and place_sum[-1] == '0'):
                 draw_result_digit = self.digits[place_sum[-1]]
                 draw_result_digit(x+summands_length-i, y-2)
-            if place_sum[-2]!='0':
+            if place_sum[-2] != '0':
                 draw_carry_digit = self.digits[place_sum[-2]]
                 draw_carry_digit(x+summands_length-1-i, y+1)
             carry = int(place_sum[-2])
@@ -263,7 +269,8 @@ class CalculatorTurtle(turtle.RawTurtle):
                 self.slash(x+len(minuhend)-i, y)
                 with self.do_half:
                     draw_creditor_digit = self.digits[str(int(minuhend[-(i+1)]) - 1)]
-                    draw_creditor_digit(2*(x+len(minuhend)-i)+1, 2*(y+1))
+                    draw_creditor_digit(2*(x+len(minuhend)-i)+1,
+                                        2*(y+1))
                     minuhend = minuhend[:-(i+1)] + str(int(minuhend[-(i+1)]) - 1) + minuhend[-i:]
                 self.slash(x+len(minuhend)-i+1, y)
                 with self.do_half:
@@ -295,7 +302,8 @@ class CalculatorTurtle(turtle.RawTurtle):
                     summands[i-1].append(int(place_product[-2]))
                     carry = 0
         summands_length = max(len(s) for s in summands)
-        self.bottom_line(x-(summands_length-factors_length)+1, y-len(factor2)-1, summands_length)
+        self.bottom_line(x-(summands_length-factors_length)+1,
+                         y-len(factor2)-1, summands_length)
         for s in summands:
             for p in range(summands_length - len(s)):
                 s.append(0)
@@ -304,7 +312,8 @@ class CalculatorTurtle(turtle.RawTurtle):
             place_sum = str(sum(s[p-1] for s in summands))
             draw_final_digit = self.digits[place_sum[-1]]
             draw_final_digit(x+factors_length-p+1, y-len(factor2)-2)
-            for i, d in enumerate(map(int, reversed(list(place_sum[:-1])))):
+            for i, d in enumerate(map(int,
+                                      reversed(list(place_sum[:-1])))):
                 summands[-1][p+i] += d
                 # but also need to support final carry into result
                 # wait, perhaps not
@@ -338,12 +347,18 @@ class CalculatorTurtle(turtle.RawTurtle):
             place_quotient = str(int(place_dividend)//int(divisor))
             self.number(place_quotient, x+len(divisor)+i+j, y)
             place_subtrahend = str(int(place_quotient)*int(divisor))
-            self.number(place_subtrahend, x+len(divisor)+i+j-(len(place_subtrahend)-1), y+(-2)*(j+1))
-            self.bottom_line(x+len(divisor)+i+j-(len(place_subtrahend)-1), y+(-2)*(j+1), len(place_subtrahend))
+            self.number(place_subtrahend,
+                        x+len(divisor)+i+j-(len(place_subtrahend)-1),
+                        y+(-2)*(j+1))
+            self.bottom_line(x+len(divisor)+i+j-(len(place_subtrahend)-1),
+                             y+(-2)*(j+1), len(place_subtrahend))
             place_dividend = str(int(place_dividend)-int(place_subtrahend))
-            self.number(place_dividend, x+len(divisor)+i+j-(len(place_dividend)-1), y+(-2)*(j+1)-1)
+            self.number(place_dividend,
+                        x+len(divisor)+i+j-(len(place_dividend)-1),
+                        y+(-2)*(j+1)-1)
             if j != len(dividend[i:])-1:
-                self.digits[dividend[i+j+1]](x+len(divisor)+i+j+1, y+(-2)*(j+1)-1)
+                self.digits[dividend[i+j+1]](x+len(divisor)+i+j+1,
+                                             y+(-2)*(j+1)-1)
         remainder = place_dividend
         self.r(x+len(divisor)+len(dividend), y)
         self.number(remainder, x+len(divisor)+len(dividend)+1, y)
@@ -362,25 +377,36 @@ class TurtleArithmetic(tkinter.Tk):
 
         # TODO: submenu to choose chalk colors?
         # IDEA: optional general colorpicker popup window?
-        # BUG: appearance and speed menus appear to behave as part of same radio group
+        # BUG: appearance and speed menus appear to behave as part of
+        # same radio group
         self.appearance_menu = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.appearance_menu.add_radiobutton(label="Chalkboard", command=self.chalkboard_appearance)
-        self.appearance_menu.add_radiobutton(label="Whiteboard", command=self.whiteboard_appearance)
-        self.menu_bar.add_cascade(label="Appearance", menu=self.appearance_menu)
+        self.appearance_menu.add_radiobutton(
+            label="Chalkboard", command=self.chalkboard_appearance
+        )
+        self.appearance_menu.add_radiobutton(
+            label="Whiteboard", command=self.whiteboard_appearance
+        )
+        self.menu_bar.add_cascade(
+            label="Appearance", menu=self.appearance_menu
+        )
 
           # TODO: test speed menu for odd behavior; it seems to work
           # inconsistently (!?!) when changed during turtle action; in
           # the worst case it could be disabled during action
         self.speed_menu = tkinter.Menu(self.menu_bar, tearoff=0)
         for s in ['slowest', 'slow', 'normal', 'fast', 'fastest']:
-            self.speed_menu.add_radiobutton(label=s, command=lambda s=s: self.our_heroine.speed(s))
+            self.speed_menu.add_radiobutton(
+                label=s, command=lambda s=s: self.our_heroine.speed(s)
+            )
         self.menu_bar.add_cascade(label="Speed", menu=self.speed_menu)
 
         self.config(menu=self.menu_bar)
         
         self.canvas_width = 500
         self.canvas_height = 500
-        self.turtle_canvas = tkinter.Canvas(self, width=self.canvas_width, height=self.canvas_height)
+        self.turtle_canvas = tkinter.Canvas(
+            self, width=self.canvas_width, height=self.canvas_height
+        )
         self.turtle_canvas.grid(row=0, columnspan=4)
 
         self.first_number_label = tkinter.Label(self, text="First number:")
@@ -395,16 +421,24 @@ class TurtleArithmetic(tkinter.Tk):
         self.second_number_field.configure(width=5)
         self.second_number_field.grid(row=2, column=2, sticky='W')
 
-        self.add_button = tkinter.Button(self, text="Add", command=self.operation('+'))
+        self.add_button = tkinter.Button(
+            self, text="Add", command=self.operation('+')
+        )
         self.add_button.grid(row=3, column=0)
 
-        self.add_button = tkinter.Button(self, text="Subtract", command=self.operation('-'))
+        self.add_button = tkinter.Button(
+            self, text="Subtract", command=self.operation('-')
+        )
         self.add_button.grid(row=3, column=1)
 
-        self.add_button = tkinter.Button(self, text="Multiply", command=self.operation('x'))
+        self.add_button = tkinter.Button(
+            self, text="Multiply", command=self.operation('x')
+        )
         self.add_button.grid(row=3, column=2)
 
-        self.add_button = tkinter.Button(self, text="Divide", command=self.operation('/'))
+        self.add_button = tkinter.Button(
+            self, text="Divide", command=self.operation('/')
+        )
         self.add_button.grid(row=3, column=3)
 
         self.setting = turtle.TurtleScreen(self.turtle_canvas)
@@ -472,31 +506,43 @@ class TurtleArithmetic(tkinter.Tk):
             nonnumbers.append(b)
         if nonnumbers:
             if len(nonnumbers) == 1:
-                error_tail = '"' + nonnumbers[0] + '" is not a number.'
+                error_tail = '"{}" is not a number.'.format(nonnumbers[0])
             elif len(nonnumbers) == 2:
-                error_tail = '"' + nonnumbers[0] + '" and "' + nonnumbers[1] + '" are not numbers.'
-            tkinter.messagebox.showerror("Turtle Comprehension Error", "The turtle doesn't understand: " + error_tail)
+                error_tail = '"{}" and "{}" are not numbers.'.format(*nonnumbers)
+            tkinter.messagebox.showerror(
+                "Turtle Comprehension Error",
+                "The turtle doesn't understand; {}".format(error_tail)
+            )
             return
         elif m < 0 or n < 0:
-            tkinter.messagebox.showerror("Turtle Ignorant of Negative Numbers", "The turtle doesn't understand negative numbers.")
+            tkinter.messagebox.showerror(
+                "Turtle Ignorant of Negative Numbers",
+                "The turtle doesn't understand negative numbers."
+            )
             for i in range(2):
                 self.appearance_menu.entryconfig(i, state=tkinter.NORMAL)
             return
         for i in range(2):
             self.appearance_menu.entryconfig(i, state=tkinter.DISABLED)
         self.our_heroine.clear()
+
         if op == '+':
             true_blocks = self.aspect('+', a, b)
             self.our_heroine.add(a, b, 1, (self.canvas_height/true_blocks[1])-2)
         elif op == '-':
             if m < n:
-                tkinter.messagebox.showerror("Turtle Ignorant of Negative Numbers", "The turtle doesn't know how to subtract a bigger number from a smaller one.")
+                tkinter.messagebox.showerror(
+                    "Turtle Ignorant of Negative Numbers",
+                    ("The turtle doesn't know how to subtract a "
+                    "bigger number from a smaller one.")
+                )
                 for i in range(2):
                     self.appearance_menu.entryconfig(i, state=tkinter.NORMAL)
                 return
             true_blocks = self.aspect('-', a, b)
-            self.our_heroine.subtract(a, b, 1, (self.canvas_height/true_blocks[1])-2)
-
+            self.our_heroine.subtract(
+                a, b, 1, (self.canvas_height/true_blocks[1])-2
+            )
         elif op == 'x':
             self.our_heroine.multiply(a, b, 2, 5)
         elif op == '/':
