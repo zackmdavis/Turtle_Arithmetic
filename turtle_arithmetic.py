@@ -7,7 +7,7 @@ from functools import partial
 
 from pdb import set_trace as debug
 
-class CalculatorTurtle(turtle.RawTurtle):    
+class CalculatorTurtle(turtle.RawTurtle):
     def __init__(self, canvas):
         turtle.RawTurtle.__init__(self, canvas)
         self.penup()
@@ -165,7 +165,7 @@ class CalculatorTurtle(turtle.RawTurtle):
         self.pendown()
         self.setheading(0)
         self.forward(0.8*self.width)
-        self.penup()        
+        self.penup()
 
     def times(self, x, y):
         self.penup()
@@ -279,7 +279,7 @@ class CalculatorTurtle(turtle.RawTurtle):
                     draw_debtor_digit(2*(x+len(minuhend)+1-i)+1, 2*(y+1))
                 place_difference = int('1' + minuhend[-i]) - int(subtrahend[-i])
                 draw_result_digit = self.digits[str(place_difference)]
-                draw_result_digit(x+len(minuhend)+1-i, y-2)                
+                draw_result_digit(x+len(minuhend)+1-i, y-2)
         self.forward(45)
 
     def multiply(self, factor1, factor2, x, y):
@@ -401,7 +401,7 @@ class TurtleArithmetic(tkinter.Tk):
         self.menu_bar.add_cascade(label="Speed", menu=self.speed_menu)
 
         self.config(menu=self.menu_bar)
-        
+
         self.canvas_width = 500
         self.canvas_height = 500
         self.turtle_canvas = tkinter.Canvas(
@@ -409,17 +409,20 @@ class TurtleArithmetic(tkinter.Tk):
         )
         self.turtle_canvas.grid(row=0, columnspan=4)
 
-        self.first_number_label = tkinter.Label(self, text="First number:")
-        self.first_number_label.grid(row=1, column=1, sticky='E')
-        self.first_number_field = tkinter.Entry(self)
-        self.first_number_field.configure(width=5)
-        self.first_number_field.grid(row=1, column=2, sticky='W')
+        self.argument_labels = []
+        self.argument_fields = []
 
-        self.second_number_label = tkinter.Label(self, text="Second number:")
-        self.second_number_label.grid(row=2, column=1, sticky='E')
-        self.second_number_field = tkinter.Entry(self)
-        self.second_number_field.configure(width=5)
-        self.second_number_field.grid(row=2, column=2, sticky='W')
+        for argument_configs in (("First", 1), ("Second", 2)):
+            new_label = tkinter.Label(
+                self, text="{} number:".format(argument_configs[0])
+            )
+            new_label.grid(row=argument_configs[1], column=1, sticky='E')
+            self.argument_labels.append(new_label)
+
+            new_field = tkinter.Entry(self)
+            new_field.configure(width=10)
+            new_field.grid(row=argument_configs[1], column=2, sticky='W')
+            self.argument_fields.append(new_field)
 
         self.add_button = tkinter.Button(
             self, text="Add", command=self.operation('+')
@@ -491,19 +494,17 @@ class TurtleArithmetic(tkinter.Tk):
         return partial(self.do_operation, op)
 
     def do_operation(self, op):
-        # TODO: check for spaces---Python's int() handles them
-        # intelligently, but my 'add' (&c.) method does not
-        # also, leading zeros
-        a, b = self.first_number_field.get().strip(), self.second_number_field.get().strip()
+        raw_arguments = [f.get().strip() for f in self.argument_fields]
+        a, b = raw_arguments
+
+        arguments = []
         nonnumbers = []
-        try:
-            m = int(a)
-        except ValueError:
-            nonnumbers.append(a)
-        try:
-            n = int(b)
-        except ValueError:
-            nonnumbers.append(b)
+        for raw_argument in raw_arguments:
+            try:
+                arguments.append(int(raw_argument))
+            except ValueError:
+                nonnumbers.append(raw_argument)
+
         if nonnumbers:
             if len(nonnumbers) == 1:
                 error_tail = '"{}" is not a number.'.format(nonnumbers[0])
@@ -514,7 +515,9 @@ class TurtleArithmetic(tkinter.Tk):
                 "The turtle doesn't understand; {}".format(error_tail)
             )
             return
-        elif m < 0 or n < 0:
+
+        m, n = arguments
+        if m < 0 or n < 0:
             tkinter.messagebox.showerror(
                 "Turtle Ignorant of Negative Numbers",
                 "The turtle doesn't understand negative numbers."
